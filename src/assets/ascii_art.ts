@@ -1,6 +1,6 @@
 var asciiArt = require("ascii-art");
 
-export function display() {
+export function displayASCIIArt() {
   asciiArt.font("SENTRY", "rusted", (err: any, rendered: any) => {
     if (err) {
       console.log("Somrthing went wrong...");

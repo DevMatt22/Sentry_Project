@@ -1,19 +1,32 @@
 import { Client, ClientOptions } from "discord.js";
 import interactionCreate from "./listeners/interactionCreate";
 import ready from "./listeners/ready";
-import { display } from "./assets/ascii_art";
+import { displayASCIIArt } from "./assets/ascii_art";
 
-const token =
-  "OTc5ODY2OTcyNDEyMDUxNDg4.GTSoR1.phC0KhQMjPJHTx3-ULr_RSVhLCYOE5U1Y4TI_I";
-
-console.log("Sentry is starting...");
+const AuthDetails = require("./auth/auth.ts").getAuthDetails();
 
 const client = new Client({
   intents: [],
 });
 
+displayASCIIArt();
+console.log("Sentry is starting...");
 
-display();
+checkValidToken();
+
 ready(client);
 interactionCreate(client);
-client.login(token);
+
+function checkValidToken(): void {
+  if (
+    !AuthDetails.hasOwnProperty("bot_token") ||
+    AuthDetails.bot_token === ""
+  ) {
+    console.error(
+      "Please create an auth.json or specify environmental variables, the bot cannot run without a bot_token"
+    ); // send message for error - no token
+    process.exit();
+  } else {
+    client.login(AuthDetails.bot_token);
+  }
+}
